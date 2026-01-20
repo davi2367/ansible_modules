@@ -34,7 +34,16 @@ options:
       device_type:
         description:
           - The device type the front port template is attached to
+<<<<<<< HEAD
         required: true
+=======
+          - Either I(device_type) or I(module_type) are required
+        type: raw
+      module_type:
+        description:
+          - The module type the front port template is attached to
+          - Either I(device_type) or I(module_type) are required
+>>>>>>> 354603a (sd)
         type: raw
       name:
         description:
@@ -103,6 +112,20 @@ EXAMPLES = r"""
           rear_port_template: Test Rear Port Template
         state: present
 
+<<<<<<< HEAD
+=======
+    - name: Create front port template for a module type within NetBox
+      netbox.netbox.netbox_front_port_template:
+        netbox_url: http://netbox.local
+        netbox_token: thisIsMyToken
+        data:
+          name: Test Front Port Template
+          module_type: Test Module Type
+          type: bnc
+          rear_port_template: Test Rear Port Template
+        state: present
+
+>>>>>>> 354603a (sd)
     - name: Update front port template with other fields
       netbox.netbox.netbox_front_port_template:
         netbox_url: http://netbox.local
@@ -160,7 +183,12 @@ def main():
                 type="dict",
                 required=True,
                 options=dict(
+<<<<<<< HEAD
                     device_type=dict(required=True, type="raw"),
+=======
+                    device_type=dict(required=False, type="raw"),
+                    module_type=dict(required=False, type="raw"),
+>>>>>>> 354603a (sd)
                     name=dict(required=True, type="str"),
                     type=dict(
                         required=False,
@@ -196,8 +224,20 @@ def main():
         ("state", "absent", ["device_type", "name", "type", "rear_port_template"]),
     ]
 
+<<<<<<< HEAD
     module = NetboxAnsibleModule(
         argument_spec=argument_spec, supports_check_mode=True, required_if=required_if
+=======
+    required_one_of = [
+        ("device_type", "module_type"),
+    ]
+
+    module = NetboxAnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+        required_if=required_if,
+        required_one_of=required_one_of,
+>>>>>>> 354603a (sd)
     )
 
     netbox_front_port_template = NetboxDcimModule(module, NB_FRONT_PORT_TEMPLATES)
