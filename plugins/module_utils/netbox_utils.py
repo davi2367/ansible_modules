@@ -1020,6 +1020,10 @@ class NetboxModule(object):
 
         query_dict = dict()
         if user_query_params:
+            # if custom_fields are used in query_params, append it
+            r = re.compile("^cf_.*")
+            if (len(list(filter(r.match, user_query_params))) > 0):
+                user_query_params.append('custom_fields')
             query_params = set(user_query_params)
         else:
             query_params = ALLOWED_QUERY_PARAMS.get(parent)
@@ -1050,6 +1054,11 @@ class NetboxModule(object):
                     )
                 else:
                     query_dict.update({match + "_id": query_id})
+            elif match == "custom_fields":
+                custom_fields = module_data.get(match)
+                for key,value in custom_fields.items():
+                    if f"cf_{key}" in user_query_params:
+                        query_dict.update({f"cf_{key}": value})
             else:
                 if child:
                     value = child.get(match)
